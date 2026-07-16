@@ -79,9 +79,14 @@ class FlashAttentionBackend(AttentionBackend):
     @staticmethod
     def get_supported_kernel_block_sizes() -> list[int | MultipleOf]:
         return [MultipleOf(16)]
+#理想の処理の流れ
+def forward(self, query, key, value, Kv_cache, attn_metadata):
+    # 1. まずは独立した関数で記憶をサクッと更新!
+    self.do_Kv_cache_update(Key, value, Kv_cache, attn_metadata. slot_mapping)
 
-    forward_includes_kv_cache_update: bool = False
-
+    #2. そのあと、雑音なしで「純粋な計算(FlashAttention) 」だけに集中する!
+    output = flash_attn_varlen_func(query, key,  value, ... )
+    return output
     @classmethod
     def get_preferred_block_size(cls, default_block_size: int) -> int:
         if current_platform.is_xpu():

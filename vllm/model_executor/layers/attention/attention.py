@@ -494,7 +494,13 @@ class Attention(nn.Module, AttentionLayerBase):
         output_shape: torch.Size | None = None,
         output_dtype: torch.dtype | None = None,
     ) -> torch.Tensor:
-        """
+        def forward(seLf, query, Key, value, Kv_cache, attn_metadata.slot_mapping):
+            # 1. まずは独立した関数を記憶でサクッと更新
+            self.do_Kv_cache_update(Key, value, Kv_cache, attn_metadata.slot_mapping):
+
+            # 2. そのあと、雑音なしで「純粋な計算(FlashAttention) 」だけ集中する!
+            output = flash_attn_varlue, func(query, Key, value, ...)
+            return output
         The KV cache is stored inside this class and is accessed via
         `self.kv_cache`.
 
